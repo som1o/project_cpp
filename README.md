@@ -1,7 +1,7 @@
-# Seismic Intelligence Analysis System (SIAS)
+# Seismic Intelligence Analysis
 
 ## Overview
-This software is designed to help citizens, researchers, and safety planners understand earthquake risks in Bangladesh. By analyzing historical earthquake data, the system identifies patterns and estimates the likelihood of future seismic events. The goal is to turn complex geological data into clear, actionable information for safety and preparedness.
+By analyzing historical earthquake data, the system identifies patterns and estimates the likelihood of future seismic events. The goal is to turn complex geological data into clear,and actionable information.
 
 ## What This Tool Does
 
@@ -28,13 +28,13 @@ You act as the researcher! The tool includes an interactive feature where you ca
 
 ## How to Use It
 
-### Step 0: Installation (One-time Setup)
+### Step 0: Build
 Before running the tool, you need to compile it. Open your terminal in the project folder and paste:
 ```bash
 g++ -o seismic_analysis main.cpp statistics.cpp
 ```
 
-### Step 1: Run the Program
+### Step 1: Run
 Launch the application from your computer's terminal.
 ```bash
 ./seismic_analysis

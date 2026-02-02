@@ -17,10 +17,15 @@ Not all earthquakes cause the same damage. This tool calculates a "Risk Score" f
 - **Socioeconomic Vulnerability**: How well-built the infrastructure is in that area.
 It categorizes events into **Low**, **Medium**, or **High** risk levels to help identify which communities are most in danger.
 
-### 4. Regional Hotspots
+### 4. Interactive Casualty Prediction
+The system uses a **Logistic Regression** machine learning model to predict if an earthquake will be deadly.
+- It learns from historical data (Magnitude + Socioeconomic Vulnerability).
+- It enables you to simulate scenarios: *"If a magnitude 7.0 hits a highly vulnerable area, will there be casualties?"*
+
+### 5. Regional Hotspots
 The system maps out which areas (like Chittagong, Sylhet, or Dhaka) are historically most active. This helps prioritize where to reinforce buildings and conduct safety drills.
 
-### 5. Interactive Calculator
+### 6. Interactive Probability Calculator
 You act as the researcher! The tool includes an interactive feature where you can input your own scenarios.
 - You enter a **Magnitude** (e.g., 7.0).
 - You enter a **Time Period** (e.g., 50 years).
@@ -31,7 +36,8 @@ You act as the researcher! The tool includes an interactive feature where you ca
 ### Step 0: Build
 Before running the tool, you need to compile it. Open your terminal in the project folder and paste:
 ```bash
-g++ -o seismic_analysis main.cpp statistics.cpp
+```bash
+g++ -o seismic_analysis main.cpp statistics.cpp LogisticRegression.cpp
 ```
 
 ### Step 1: Run
@@ -51,6 +57,12 @@ At the very end, the program will ask you for input.
 1. Type the earthquake magnitude you are worried about (e.g., `6.5`).
 2. Type the number of years you want to forecast for (e.g., `10` or `100`).
 The tool will show you the exact percentage chance of that event occurring.
+
+### Step 4: ML Predictions
+The program will also ask you to test the ML model:
+1. Enter a Magnitude (e.g., `7.5`).
+2. Enter a Vulnerability Level (1=Low, 3=High).
+3. The model predicts the probability of casualties based on patterns it learned from history.
 
 ## Why This Matters
 Bangladesh sits at a complex junction of three massive tectonic plates. Understanding these risks isn't just about numbers—it's about saving lives. By using data to better understand our geological history, we can take smarter steps today to prepare for tomorrow.

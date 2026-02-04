@@ -52,14 +52,20 @@ void displayBasicStats(const std::vector<Earthquake> &data) {
 
   int minYear = std::numeric_limits<int>::max();
   int maxYear = std::numeric_limits<int>::min();
+  bool hasValidYear = false;
   for (const auto &eq : data) {
     if (eq.year > 0) {
       minYear = std::min(minYear, eq.year);
       maxYear = std::max(maxYear, eq.year);
+      hasValidYear = true;
     }
   }
-  std::cout << "  Time Period: " << minYear << " - " << maxYear << " ("
-            << (maxYear - minYear + 1) << " years)\n";
+  if (hasValidYear) {
+    std::cout << "  Time Period: " << minYear << " - " << maxYear << " ("
+              << (maxYear - minYear + 1) << " years)\n";
+  } else {
+    std::cout << "  Time Period: Unknown (no valid years)\n";
+  }
 }
 
 void displayGutenbergRichter(const std::vector<Earthquake> &data) {
@@ -327,13 +333,33 @@ void displayLogisticRegressionAnalysis(const std::vector<Earthquake> &data) {
   while (true) {
     std::cout << "  Enter Magnitude (or -1 to skip): ";
     double mag_in;
-    if (!(std::cin >> mag_in) || mag_in == -1)
+    if (!(std::cin >> mag_in)) {
+      if (std::cin.eof()) {
+        break;
+      }
+      std::cout << "  Invalid input. Please enter a number.\n";
+      std::cin.clear();
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      continue;
+    }
+    if (mag_in == -1) {
       break;
+    }
 
     std::cout
         << "  Enter Socioeconomic Level (1=Low, 2=Med, 3=High Vulnerability): ";
     double socio_in;
-    std::cin >> socio_in;
+    while (!(std::cin >> socio_in) || socio_in < 1.0 || socio_in > 3.0) {
+      if (std::cin.eof()) {
+        break;
+      }
+      std::cout << "  Invalid input. Enter 1, 2, or 3: ";
+      std::cin.clear();
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+    if (!std::cin || std::cin.eof()) {
+      break;
+    }
 
     double prob = model.predictProba({mag_in, socio_in});
 

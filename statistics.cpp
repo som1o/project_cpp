@@ -108,6 +108,10 @@ double calculateBValue(const std::vector<Earthquake> &data, double minMagnitude,
   double meanMag = calculateMean(magnitudes);
   double minMag = *std::min_element(magnitudes.begin(), magnitudes.end());
 
+  if (meanMag <= minMag) {
+    return 0.0;
+  }
+
   double bValue = 1.0 / (std::log(10.0) * (meanMag - minMag));
   return std::abs(bValue);
 }
@@ -130,14 +134,20 @@ double calculateReturnPeriod(const std::vector<Earthquake> &data,
   int count = 0;
   int minYear = std::numeric_limits<int>::max();
   int maxYear = std::numeric_limits<int>::min();
+  bool hasValidYear = false;
 
   for (const auto &eq : data) {
     if (eq.year > 0) {
       minYear = std::min(minYear, eq.year);
       maxYear = std::max(maxYear, eq.year);
+      hasValidYear = true;
     }
     if (eq.magnitude >= minMagnitude)
       count++;
+  }
+
+  if (!hasValidYear) {
+    return std::numeric_limits<double>::infinity();
   }
 
   int yearsOfObservation = maxYear - minYear + 1;
@@ -265,14 +275,20 @@ double calculateAnnualRate(const std::vector<Earthquake> &data,
   int count = 0;
   int minYear = std::numeric_limits<int>::max();
   int maxYear = std::numeric_limits<int>::min();
+  bool hasValidYear = false;
 
   for (const auto &eq : data) {
     if (eq.year > 0) {
       minYear = std::min(minYear, eq.year);
       maxYear = std::max(maxYear, eq.year);
+      hasValidYear = true;
     }
     if (eq.magnitude >= minMagnitude)
       count++;
+  }
+
+  if (!hasValidYear) {
+    return 0.0;
   }
 
   int yearsOfObservation = maxYear - minYear + 1;
@@ -287,8 +303,11 @@ void displayInteractiveProbability(const std::vector<Earthquake> &data) {
 
   std::cout << "  Enter a Magnitude threshold (e.g., 6.0): ";
   double inputMag;
-  while (!(std::cin >> inputMag)) {
-    std::cout << "  Invalid input. Please enter a number: ";
+  while (!(std::cin >> inputMag) || inputMag <= 0.0) {
+    if (std::cin.eof()) {
+      return;
+    }
+    std::cout << "  Invalid input. Please enter a positive number: ";
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
   }
@@ -296,6 +315,9 @@ void displayInteractiveProbability(const std::vector<Earthquake> &data) {
   std::cout << "  Enter Time Period in years (e.g., 50): ";
   double inputYears;
   while (!(std::cin >> inputYears) || inputYears <= 0) {
+    if (std::cin.eof()) {
+      return;
+    }
     std::cout << "  Invalid input. Please enter a positive number: ";
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
